@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+﻿from fastapi import FastAPI
 
 app = FastAPI(title="Newtonite Ops API", version="0.1.0")
 

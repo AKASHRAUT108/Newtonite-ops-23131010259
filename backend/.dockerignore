@@ -1,3 +1,4 @@
+@'
 __pycache__
 *.pyc
 .venv
@@ -5,3 +6,4 @@ venv
 .pytest_cache
 .env
 tests
+'@ | Set-Content -Path backend\.dockerignore -Encoding utf8

@@ -1,3 +1,4 @@
+@'
 # Python
 __pycache__/
 *.py[cod]
@@ -32,3 +33,4 @@ Thumbs.db
 
 # Docker
 *.log
+'@ | Set-Content -Path .gitignore -Encoding utf8
