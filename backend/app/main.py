@@ -1,6 +1,10 @@
 ﻿from fastapi import FastAPI
 
-app = FastAPI(title="Newtonite Ops API", version="0.1.0")
+from app.routers import auth as auth_router
+
+app = FastAPI(title="Newtonite Ops API", version="0.2.0")
+
+app.include_router(auth_router.router)
 
 
 @app.get("/health")
