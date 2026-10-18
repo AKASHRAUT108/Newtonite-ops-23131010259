@@ -278,8 +278,6 @@ async def claim_item(
     updated = result.scalar_one_or_none()
 
     if updated is None:
-        # Snapshot the fields we need BEFORE invalidating the session.
-        # (MissingGreenlet otherwise fires when _conflict reads .version.)
         await session.refresh(item)
         snapshot = {
             "id": str(item.id),
@@ -293,13 +291,11 @@ async def claim_item(
             detail={"detail": "item already claimed", "current": snapshot},
         )
 
-        await _log(
+    await _log(
         session, item_id, user.id, "claimed",
         old={"assignee_id": None},
         new={"assignee_id": str(user.id)},
     )
-    # Enqueue the async notification IN THE SAME TRANSACTION as the claim.
-    # If the claim commits, the job exists. If the claim rolls back, the job doesn't.
     await outbox.enqueue(
         session,
         "notify_assignee",
@@ -308,8 +304,6 @@ async def claim_item(
     await session.commit()
     await session.refresh(updated)
     return updated
-
-
 # ---------------- edit with version lock ----------------
 
 async def update_item(
