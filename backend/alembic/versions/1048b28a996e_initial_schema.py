@@ -1,8 +1,8 @@
 """initial schema
 
-Revision ID: 5274b70534b6
+Revision ID: 1048b28a996e
 Revises: 
-Create Date: 2026-10-17 04:44:59.404387
+Create Date: 2026-10-18 00:00:22.894909
 """
 from typing import Sequence, Union
 
@@ -10,7 +10,7 @@ from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
-revision: str = '5274b70534b6'
+revision: str = '1048b28a996e'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
