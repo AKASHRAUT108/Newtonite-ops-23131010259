@@ -32,7 +32,7 @@ from app.models import (
 from app.permissions import Action, can
 from app.schemas import ItemCreate, ItemUpdate
 from app.workflow import is_legal_transition, requires_approval
-
+from app.services import outbox
 
 # ---------------- helpers ----------------
 
@@ -293,10 +293,17 @@ async def claim_item(
             detail={"detail": "item already claimed", "current": snapshot},
         )
 
-    await _log(
+        await _log(
         session, item_id, user.id, "claimed",
         old={"assignee_id": None},
         new={"assignee_id": str(user.id)},
+    )
+    # Enqueue the async notification IN THE SAME TRANSACTION as the claim.
+    # If the claim commits, the job exists. If the claim rolls back, the job doesn't.
+    await outbox.enqueue(
+        session,
+        "notify_assignee",
+        {"item_id": str(item_id), "assignee_id": str(user.id)},
     )
     await session.commit()
     await session.refresh(updated)
