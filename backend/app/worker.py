@@ -33,7 +33,7 @@ MAX_BACKOFF_SECONDS = 60
 
 
 # ---------- handlers (idempotent) ----------
-raise RuntimeError("forced failure to demonstrate retries")
+
 async def handle_notify_assignee(session: AsyncSession, payload: dict) -> None:
     """
     Idempotent: appending to a text log is repeat-safe.
@@ -41,6 +41,7 @@ async def handle_notify_assignee(session: AsyncSession, payload: dict) -> None:
     enforce idempotency via a unique (item_id, recipient) row before send.
     Here we just log.
     """
+        raise RuntimeError("forced failure to demonstrate retries")
     item_id = payload.get("item_id")
     assignee_id = payload.get("assignee_id")
     logger.info("NOTIFY assignee=%s item=%s", assignee_id, item_id)
